@@ -1,42 +1,40 @@
-import { useState } from "react";
-import { IoIosAdd } from "react-icons/io";
-function AddTodo({onNewItem}){
+import { useRef } from "react";
+import { BiMessageAdd } from "react-icons/bi";
 
-  const [todoName,setTodoName]=useState("");
-  const [dueDate,setDueDate]=useState("");
+function AddTodo({ onNewItem }) {
+  const todoNameElement = useRef();
+  const dueDateElement = useRef();
 
-  const handleNameChange=(event)=>{
-setTodoName(event.target.value);
-  }
-  
-  const handleDateChange=(event)=>{
-    setDueDate(event.target.value);
-  }
-  const handledAddButtonClicked=()=>{
-    onNewItem(todoName,dueDate);
-    setDueDate(" ");
-    setTodoName(" ");
-  }
-return(
+  const handleAddButtonClicked = (event) => {
+    event.preventDefault();
+    const todoName = todoNameElement.current.value;
+    const dueDate = dueDateElement.current.value;
+    todoNameElement.current.value = "";
+    dueDateElement.current.value = "";
+    onNewItem(todoName, dueDate);
+  };
+
+  return (
     <div className="container text-center">
-    <div className="row kg-row">
-    <div className="col-6">
-      <input type="text" placeholder="Enter Todo here" value={todoName} onChange={handleNameChange} />
+      <form className="row kg-row" onSubmit={handleAddButtonClicked}>
+        <div className="col-6">
+          <input
+            type="text"
+            ref={todoNameElement}
+            placeholder="Enter Todo Here"
+          />
+        </div>
+        <div className="col-4">
+          <input type="date" ref={dueDateElement} />
+        </div>
+        <div className="col-2">
+          <button type="submit" className="btn btn-success kg-button">
+            <BiMessageAdd />
+          </button>
+        </div>
+      </form>
     </div>
-    <div className="col-4">
-      <input type="date" value={dueDate}onChange={handleDateChange}/>
-    </div>
-    
-    <div className="col-2">
-    <button type="button" className="btn btn-success kg-button"
-      onClick={handledAddButtonClicked}
-
-      >
-      < IoIosAdd/>
-    </button>
-    </div>
-  </div>
-  </div>
-)
+  );
 }
+
 export default AddTodo;
